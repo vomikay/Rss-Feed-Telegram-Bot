@@ -22,7 +22,7 @@ public class Config {
     public Integer PROXY_PORT;
     public DefaultBotOptions.ProxyType PROXY_TYPE;
 
-    private static Config instance;
+    private static volatile Config instance;
 
     private Config() {
         try (FileInputStream input = new FileInputStream("config.properties")) {
@@ -45,8 +45,12 @@ public class Config {
     }
 
     public static Config getInstance() {
-        if (Objects.isNull(instance)) {
-            instance = new Config();
+        if (instance == null) {
+            synchronized (Config.class) {
+                if (instance == null) {
+                    instance = new Config();
+                }
+            }
         }
         return instance;
     }
