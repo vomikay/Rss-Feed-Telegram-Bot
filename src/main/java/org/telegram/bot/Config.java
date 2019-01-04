@@ -13,6 +13,8 @@ public class Config {
 
     private static final Logger log = Logger.getLogger(Config.class.getName());
 
+    public String DATABASE_URL;
+
     public String BOT_TOKEN;
     public String BOT_USERNAME;
 
@@ -26,6 +28,8 @@ public class Config {
         try (FileInputStream input = new FileInputStream("config.properties")) {
             Properties properties = new Properties();
             properties.load(input);
+
+            DATABASE_URL = properties.getProperty("database.url");
 
             BOT_TOKEN = properties.getProperty("bot.token");
             BOT_USERNAME = properties.getProperty("bot.username");
