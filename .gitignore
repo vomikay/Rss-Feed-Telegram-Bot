@@ -1,6 +1,7 @@
 # Intelij IDEA
 .idea/
 *.iml
+*.properties
 
 # Compiled class file
 *.class
