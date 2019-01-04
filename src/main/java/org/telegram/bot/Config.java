@@ -1,5 +1,7 @@
 package org.telegram.bot;
 
+import org.telegram.telegrambots.bots.DefaultBotOptions;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Objects;
@@ -14,6 +16,10 @@ public class Config {
     public String BOT_TOKEN;
     public String BOT_USERNAME;
 
+    public String PROXY_HOST;
+    public Integer PROXY_PORT;
+    public DefaultBotOptions.ProxyType PROXY_TYPE;
+
     private static Config instance;
 
     private Config() {
@@ -23,6 +29,12 @@ public class Config {
 
             BOT_TOKEN = properties.getProperty("bot.token");
             BOT_USERNAME = properties.getProperty("bot.username");
+
+            if (!Objects.isNull(properties.getProperty("proxy.type"))) {
+                PROXY_TYPE = DefaultBotOptions.ProxyType.valueOf(properties.getProperty("proxy.type"));
+                PROXY_HOST = properties.getProperty("proxy.host");
+                PROXY_PORT = Integer.valueOf(properties.getProperty("proxy.port"));
+            }
         } catch (IOException ex) {
             log.log(Level.SEVERE, "Configuration error", ex);
         }
