@@ -15,7 +15,6 @@ public class Config {
     public static final Integer PROXY_PORT;
     public static final String BOT_TOKEN;
     public static final String BOT_USERNAME;
-    public static final String DATABASE_URL;
 
     private static final Logger LOG = Logger.getLogger(Config.class.getName());
 
@@ -28,7 +27,6 @@ public class Config {
             PROXY_PORT = Integer.valueOf(properties.getProperty("proxy.port"));
             BOT_TOKEN = properties.getProperty("bot.token");
             BOT_USERNAME = properties.getProperty("bot.username");
-            DATABASE_URL = properties.getProperty("database.url");
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Failed to configure application", ex);
             throw new ExceptionInInitializerError();

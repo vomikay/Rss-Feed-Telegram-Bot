@@ -2,6 +2,7 @@
 .idea/
 *.iml
 *.properties
+*.cfg.xml
 
 # Compiled class file
 *.class
