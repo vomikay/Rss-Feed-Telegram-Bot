@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class Config {
 
-    private static final Logger log = Logger.getLogger(Config.class.getName());
+    private static final Logger LOG = Logger.getLogger(Config.class.getName());
 
     public String DATABASE_URL;
 
@@ -40,7 +40,7 @@ public class Config {
                 PROXY_PORT = Integer.valueOf(properties.getProperty("proxy.port"));
             }
         } catch (IOException ex) {
-            log.log(Level.SEVERE, "Configuration error", ex);
+            LOG.log(Level.SEVERE, "Configuration error", ex);
         }
     }
 

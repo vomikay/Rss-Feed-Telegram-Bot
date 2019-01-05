@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class Main {
 
-    private static final Logger log = Logger.getLogger(Main.class.getName());
+    private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
         try {
@@ -25,8 +25,9 @@ public class Main {
                 options.setProxyPort(Config.getInstance().PROXY_PORT);
             }
             api.registerBot(new RssFeedBot(options));
+            LOG.info("Bot is ready for work");
         } catch (TelegramApiRequestException ex) {
-            log.log(Level.SEVERE, "Initialization bot error", ex);
+            LOG.log(Level.SEVERE, "Initialization bot error", ex);
         }
     }
 }
