@@ -20,11 +20,11 @@ public class RssFeedBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return Config.getInstance().BOT_USERNAME;
+        return Config.BOT_USERNAME;
     }
 
     @Override
     public String getBotToken() {
-        return Config.getInstance().BOT_TOKEN;
+        return Config.BOT_TOKEN;
     }
 }

@@ -23,7 +23,7 @@ public class NotificationService implements Runnable {
                 // Do something
                 Thread.sleep(SLEEP_TIME);
             } catch (InterruptedException ex) {
-                LOG.log(Level.SEVERE,"Interrupted error", ex);
+                LOG.log(Level.SEVERE,"Interrupt error", ex);
                 Thread.currentThread().interrupt();
             }
         }

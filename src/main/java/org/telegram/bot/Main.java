@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.ApiContext;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,10 +18,10 @@ public class Main {
             ApiContextInitializer.init();
             TelegramBotsApi api = new TelegramBotsApi();
             DefaultBotOptions options = ApiContext.getInstance(DefaultBotOptions.class);
-            if (!Objects.isNull(Config.getInstance().PROXY_TYPE)) {
-                options.setProxyType(Config.getInstance().PROXY_TYPE);
-                options.setProxyHost(Config.getInstance().PROXY_HOST);
-                options.setProxyPort(Config.getInstance().PROXY_PORT);
+            if (Config.PROXY_TYPE != null) {
+                options.setProxyType(Config.PROXY_TYPE);
+                options.setProxyHost(Config.PROXY_HOST);
+                options.setProxyPort(Config.PROXY_PORT);
             }
             api.registerBot(new RssFeedBot(options));
             LOG.info("Bot is ready for work");
