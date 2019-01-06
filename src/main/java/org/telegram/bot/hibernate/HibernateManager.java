@@ -2,7 +2,7 @@ package org.telegram.bot.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.telegram.bot.hibernate.dao.Subscription;
+import org.telegram.bot.hibernate.model.Subscription;
 
 public class HibernateManager {
 

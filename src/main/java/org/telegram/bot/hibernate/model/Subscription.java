@@ -1,4 +1,4 @@
-package org.telegram.bot.hibernate.dao;
+package org.telegram.bot.hibernate.model;
 
 import javax.persistence.*;
 import java.net.URL;
@@ -13,16 +13,16 @@ public class Subscription {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "chat", nullable = false)
+    @Column(name = "chat")
     private Long chat;
 
-    @Column(name = "url", nullable = false)
+    @Column(name = "url")
     private URL url;
 
-    @Column(name = "lastupdate", nullable = false)
+    @Column(name = "lastupdate")
     private Timestamp lastUpdate;
 
-    private Subscription() {
+    public Subscription() {
     }
 
     public Subscription(Long chat, URL url, Timestamp lastUpdate) {
