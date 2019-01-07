@@ -54,8 +54,8 @@ public class NotificationService implements Runnable {
             List<SyndEntry> entries = getEntries(feed, subscription);
 
             if (!entries.isEmpty()) {
-                String htmlText = getMessageText(subscription.getTitle(), entries);
-                MessageUtil.sendMessage(sender, subscription.getChat(), htmlText);
+                String sendText = getSendText(subscription.getTitle(), entries);
+                MessageUtil.sendMessage(sender, subscription.getChat(), sendText);
                 subscription.setLastUpdate(newUpdate);
                 dao.update(subscription);
             }
@@ -76,18 +76,18 @@ public class NotificationService implements Runnable {
                 .collect(Collectors.toList());
     }
 
-    private String getMessageText(String title, List<SyndEntry> entries) {
-        StringBuilder htmlTextBuilder = new StringBuilder();
-        htmlTextBuilder.append("<b>")
+    private String getSendText(String title, List<SyndEntry> entries) {
+        StringBuilder sendTextBuilder = new StringBuilder();
+        sendTextBuilder.append("<b>")
                 .append(title)
                 .append("</b>\n");
         for (SyndEntry feedEntry : entries) {
-            htmlTextBuilder.append("<a href='")
+            sendTextBuilder.append("<a href='")
                     .append(feedEntry.getLink())
                     .append("'>")
                     .append(feedEntry.getTitle())
                     .append("</a>\n");
         }
-        return htmlTextBuilder.toString();
+        return sendTextBuilder.toString();
     }
 }

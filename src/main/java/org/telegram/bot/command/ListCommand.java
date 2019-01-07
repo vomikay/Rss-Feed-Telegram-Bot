@@ -15,12 +15,12 @@ public class ListCommand implements BotCommand {
     public void execute(AbsSender sender, Chat chat, User user, String text) {
         SubscriptionDao subscriptionDao = new SubscriptionDao();
         List<Subscription> subscriptions = subscriptionDao.getAll();
-        StringBuilder htmlTextBuilder = new StringBuilder();
+        StringBuilder sendTextBuilder = new StringBuilder();
         int number = 1;
         if (!subscriptions.isEmpty()) {
-            htmlTextBuilder.append("Your subscriptions:\n");
+            sendTextBuilder.append("Your subscriptions:\n");
             for (Subscription subscription : subscriptions) {
-                htmlTextBuilder.append(number)
+                sendTextBuilder.append(number)
                         .append(". ")
                         .append("<a href='")
                         .append(subscription.getUrl())
@@ -29,7 +29,7 @@ public class ListCommand implements BotCommand {
                         .append("</a>\n");
                 number++;
             }
-            MessageUtil.sendMessage(sender, chat.getId(), htmlTextBuilder.toString());
+            MessageUtil.sendMessage(sender, chat.getId(), sendTextBuilder.toString());
         } else {
             String sendText = "Your subscription list is empty";
             MessageUtil.sendErrorMessage(sender, chat.getId(), sendText);
