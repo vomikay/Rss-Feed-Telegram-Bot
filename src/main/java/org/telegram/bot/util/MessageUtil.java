@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 public class MessageUtil {
 
     private static final Logger LOG = Logger.getLogger(MessageUtil.class.getName());
+    private static final String SUCCESS_EMOJI = "\u2705";
+    private static final String ERROR_EMOJI = "\u2757";
 
     public static void sendMessage(AbsSender sender, Long chatId, String htmlText) {
         try {
@@ -21,5 +23,13 @@ public class MessageUtil {
         } catch (TelegramApiException ex) {
             LOG.log(Level.SEVERE, "Failed to send message", ex);
         }
+    }
+
+    public static void sendSuccessMessage(AbsSender sender, Long chatId, String htmlText) {
+        sendMessage(sender, chatId, SUCCESS_EMOJI + " " + htmlText);
+    }
+
+    public static void sendErrorMessage(AbsSender sender, Long chatId, String htmlText) {
+        sendMessage(sender, chatId, ERROR_EMOJI + " " + htmlText);
     }
 }

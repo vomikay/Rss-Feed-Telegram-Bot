@@ -29,10 +29,10 @@ public class SubscribeCommand implements BotCommand {
             subscriptionDao.add(subscription);
             String sendText = "You subscribed to <a href='" + subscription.getUrl() + "'>"
                     + subscription.getTitle() + "</a>";
-            MessageUtil.sendMessage(sender, chat.getId(), sendText);
+            MessageUtil.sendSuccessMessage(sender, chat.getId(), sendText);
         } catch (Exception ex) {
             String sendText = "Sorry! It isn't rss link";
-            MessageUtil.sendMessage(sender, chat.getId(), sendText);
+            MessageUtil.sendErrorMessage(sender, chat.getId(), sendText);
         }
     }
 }
