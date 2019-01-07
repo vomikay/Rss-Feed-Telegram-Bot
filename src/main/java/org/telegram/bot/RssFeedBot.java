@@ -1,8 +1,5 @@
 package org.telegram.bot;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.telegram.bot.hibernate.HibernateManager;
 import org.telegram.bot.hibernate.dao.SubscriptionDao;
 import org.telegram.bot.hibernate.model.Subscription;
 import org.telegram.bot.service.NotificationService;
@@ -30,7 +27,7 @@ public class RssFeedBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() &&  update.getMessage().hasText()) {
+        if (update.hasMessage() && update.getMessage().hasText()) {
             try {
                 Message message = update.getMessage();
                 Subscription subscription = new Subscription(
