@@ -7,9 +7,8 @@ import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.telegram.bot.hibernate.dao.SubscriptionDao;
 import org.telegram.bot.hibernate.model.Subscription;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.bot.util.MessageUtil;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -48,9 +47,6 @@ public class NotificationService implements Runnable {
     }
 
     private void sendMessage(SubscriptionDao dao, Subscription subscription) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setParseMode("html");
-        sendMessage.setChatId(subscription.getChat());
         try {
             XmlReader xml = new XmlReader(subscription.getUrl());
             SyndFeed feed = new SyndFeedInput().build(xml);
@@ -60,8 +56,7 @@ public class NotificationService implements Runnable {
 
             if (!entries.isEmpty()) {
                 String htmlText = getMessageText(title, entries);
-                sendMessage.setText(htmlText);
-                sender.execute(sendMessage);
+                MessageUtil.sendMessage(sender, subscription.getChat(), htmlText);
                 subscription.setLastUpdate(newUpdate);
                 dao.update(subscription);
             }
@@ -69,8 +64,6 @@ public class NotificationService implements Runnable {
             LOG.log(Level.SEVERE, "Failed to read xml", ex);
         } catch (FeedException ex) {
             LOG.log(Level.SEVERE, "Invalid rss format", ex);
-        } catch (TelegramApiException ex) {
-            LOG.log(Level.SEVERE, "Failed to send message", ex);
         }
     }
 
@@ -85,17 +78,17 @@ public class NotificationService implements Runnable {
     }
 
     private String getMessageText(String title, List<SyndEntry> entries) {
-        StringBuilder htmlText = new StringBuilder();
-        htmlText.append("<b>")
+        StringBuilder htmlTextBuilder = new StringBuilder();
+        htmlTextBuilder.append("<b>")
                 .append(title)
                 .append("</b>\n");
         for (SyndEntry feedEntry : entries) {
-            htmlText.append("<a href='")
+            htmlTextBuilder.append("<a href='")
                     .append(feedEntry.getLink())
                     .append("'>")
                     .append(feedEntry.getTitle())
                     .append("</a>\n");
         }
-        return htmlText.toString();
+        return htmlTextBuilder.toString();
     }
 }
