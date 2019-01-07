@@ -6,20 +6,32 @@ import org.hibernate.query.Query;
 import org.telegram.bot.hibernate.model.Subscription;
 import org.telegram.bot.util.HibernateUtil;
 
+import java.net.URL;
 import java.util.List;
 
 public class SubscriptionDao {
 
-    public boolean hasExisted(Subscription subscription) {
+    public boolean hasExist(Long chat, URL url) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.getCurrentSession();
         session.beginTransaction();
         Query query = session.createQuery("from Subscription where :chat = chat and :url = url");
-        query.setParameter("chat", subscription.getChat());
-        query.setParameter("url", subscription.getUrl());
+        query.setParameter("chat", chat);
+        query.setParameter("url", url);
         List result = query.getResultList();
         session.getTransaction().commit();
         return !result.isEmpty();
+    }
+
+    public void delete(Long chat, URL url) {
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("delete from Subscription where :chat = chat and :url = url");
+        query.setParameter("chat", chat);
+        query.setParameter("url", url);
+        query.executeUpdate();
+        session.getTransaction().commit();
     }
 
     public void add(Subscription subscription) {

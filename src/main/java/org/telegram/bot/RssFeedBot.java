@@ -3,6 +3,7 @@ package org.telegram.bot;
 import org.telegram.bot.command.BotCommand;
 import org.telegram.bot.command.ListCommand;
 import org.telegram.bot.command.SubscribeCommand;
+import org.telegram.bot.command.UnsubscribeCommand;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Chat;
@@ -19,6 +20,7 @@ public class RssFeedBot extends TelegramLongPollingBot {
     private final Map<String, BotCommand> commands = new HashMap<String, BotCommand>() {{
         put("list", new ListCommand());
         put("subscribe", new SubscribeCommand());
+        put("unsubscribe", new UnsubscribeCommand());
     }};
 
     public RssFeedBot(DefaultBotOptions options) {
