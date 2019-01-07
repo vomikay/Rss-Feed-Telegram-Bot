@@ -1,21 +1,23 @@
 package org.telegram.bot;
 
-import org.telegram.bot.hibernate.dao.SubscriptionDao;
-import org.telegram.bot.hibernate.model.Subscription;
+import org.telegram.bot.command.BotCommand;
+import org.telegram.bot.command.SubscribeCommand;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RssFeedBot extends TelegramLongPollingBot {
 
-    private static final Logger LOG = Logger.getLogger(RssFeedBot.class.getName());
+    private final Map<String, BotCommand> commands = new HashMap<String, BotCommand>() {{
+       put("subscribe", new SubscribeCommand());
+    }};
 
     public RssFeedBot(DefaultBotOptions options) {
         super(options);
@@ -23,17 +25,16 @@ public class RssFeedBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            try {
-                Message message = update.getMessage();
-                Subscription subscription = new Subscription(
-                        message.getChatId(),
-                        new URL(message.getText()),
-                        new Timestamp(System.currentTimeMillis()));
-                SubscriptionDao subscriptionDao = new SubscriptionDao();
-                subscriptionDao.add(subscription);
-            } catch (MalformedURLException ex) {
-                LOG.log(Level.SEVERE, "Failed to convert string to url", ex);
+        if (update.hasMessage()) {
+            Message message = update.getMessage();
+            if (message.isCommand()) {
+                String command = getCommand(message.getText());
+                String text = getCommandMessage(message.getText());
+                Chat chat = message.getChat();
+                User user = message.getFrom();
+                if (commands.containsKey(command)) {
+                    commands.get(command).execute(this, chat, user, text);
+                }
             }
         }
     }
@@ -46,5 +47,16 @@ public class RssFeedBot extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         return Config.BOT_TOKEN;
+    }
+
+    private String getCommand(String text) {
+        String[] commandSplit = text.substring(1).split("\\s+");
+        return commandSplit[0];
+    }
+
+    private String getCommandMessage(String text) {
+        String[] commandSplit = text.substring(1).split("\\s+");
+        String[] textSplit = Arrays.copyOfRange(commandSplit, 1, commandSplit.length);
+        return String.join(" ", textSplit);
     }
 }
