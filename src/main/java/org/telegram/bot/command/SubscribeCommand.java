@@ -12,11 +12,8 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 
 import java.net.URL;
 import java.sql.Timestamp;
-import java.util.logging.Logger;
 
 public class SubscribeCommand implements BotCommand {
-
-    private static final Logger LOG = Logger.getLogger(SubscribeCommand.class.getName());
 
     @Override
     public void execute(AbsSender sender, Chat chat, User user, String text) {
@@ -26,10 +23,12 @@ public class SubscribeCommand implements BotCommand {
             SubscriptionDao subscriptionDao = new SubscriptionDao();
             Subscription subscription = new Subscription(
                     chat.getId(),
-                    new URL(text),
+                    url,
+                    feed.getTitle(),
                     new Timestamp(System.currentTimeMillis()));
             subscriptionDao.add(subscription);
-            String sendText = "You subscribed to <b>" + feed.getTitle() + "</b>";
+            String sendText = "You subscribed to <a href='" + subscription.getUrl() + "'>"
+                    + subscription.getTitle() + "</a>";
             MessageUtil.sendMessage(sender, chat.getId(), sendText);
         } catch (Exception ex) {
             String sendText = "Sorry! It isn't rss link";

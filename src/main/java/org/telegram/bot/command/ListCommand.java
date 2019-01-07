@@ -8,11 +8,8 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class ListCommand implements BotCommand {
-
-    private static final Logger LOG = Logger.getLogger(ListCommand.class.getName());
 
     @Override
     public void execute(AbsSender sender, Chat chat, User user, String text) {
@@ -20,13 +17,14 @@ public class ListCommand implements BotCommand {
         List<Subscription> subscriptions = subscriptionDao.getAll();
         StringBuilder htmlTextBuilder = new StringBuilder();
         int number = 1;
+        htmlTextBuilder.append("Your subscriptions:\n");
         for (Subscription subscription : subscriptions) {
             htmlTextBuilder.append(number)
                     .append(". ")
                     .append("<a href='")
                     .append(subscription.getUrl())
                     .append("'>")
-                    .append(subscription.getUrl())
+                    .append(subscription.getTitle())
                     .append("</a>\n");
             number++;
         }

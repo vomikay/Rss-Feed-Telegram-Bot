@@ -51,11 +51,10 @@ public class NotificationService implements Runnable {
             XmlReader xml = new XmlReader(subscription.getUrl());
             SyndFeed feed = new SyndFeedInput().build(xml);
             Timestamp newUpdate = new Timestamp(System.currentTimeMillis());
-            String title = feed.getTitle();
             List<SyndEntry> entries = getEntries(feed, subscription);
 
             if (!entries.isEmpty()) {
-                String htmlText = getMessageText(title, entries);
+                String htmlText = getMessageText(subscription.getTitle(), entries);
                 MessageUtil.sendMessage(sender, subscription.getChat(), htmlText);
                 subscription.setLastUpdate(newUpdate);
                 dao.update(subscription);

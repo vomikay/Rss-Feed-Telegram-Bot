@@ -19,15 +19,19 @@ public class Subscription {
     @Column(name = "url")
     private URL url;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "lastupdate")
     private Timestamp lastUpdate;
 
     public Subscription() {
     }
 
-    public Subscription(Long chat, URL url, Timestamp lastUpdate) {
+    public Subscription(Long chat, URL url, String title, Timestamp lastUpdate) {
         this.chat = chat;
         this.url = url;
+        this.title = title;
         this.lastUpdate = lastUpdate;
     }
 
@@ -53,6 +57,14 @@ public class Subscription {
 
     public void setUrl(URL url) {
         this.url = url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Timestamp getLastUpdate() {
