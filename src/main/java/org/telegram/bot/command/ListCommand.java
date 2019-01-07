@@ -17,17 +17,22 @@ public class ListCommand implements BotCommand {
         List<Subscription> subscriptions = subscriptionDao.getAll();
         StringBuilder htmlTextBuilder = new StringBuilder();
         int number = 1;
-        htmlTextBuilder.append("Your subscriptions:\n");
-        for (Subscription subscription : subscriptions) {
-            htmlTextBuilder.append(number)
-                    .append(". ")
-                    .append("<a href='")
-                    .append(subscription.getUrl())
-                    .append("'>")
-                    .append(subscription.getTitle())
-                    .append("</a>\n");
-            number++;
+        if (!subscriptions.isEmpty()) {
+            htmlTextBuilder.append("Your subscriptions:\n");
+            for (Subscription subscription : subscriptions) {
+                htmlTextBuilder.append(number)
+                        .append(". ")
+                        .append("<a href='")
+                        .append(subscription.getUrl())
+                        .append("'>")
+                        .append(subscription.getTitle())
+                        .append("</a>\n");
+                number++;
+            }
+            MessageUtil.sendMessage(sender, chat.getId(), htmlTextBuilder.toString());
+        } else {
+            String sendText = "Your subscription list is empty";
+            MessageUtil.sendErrorMessage(sender, chat.getId(), sendText);
         }
-        MessageUtil.sendMessage(sender, chat.getId(), htmlTextBuilder.toString());
     }
 }
