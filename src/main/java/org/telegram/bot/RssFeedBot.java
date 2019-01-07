@@ -1,6 +1,7 @@
 package org.telegram.bot;
 
 import org.telegram.bot.command.BotCommand;
+import org.telegram.bot.command.ListCommand;
 import org.telegram.bot.command.SubscribeCommand;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -16,7 +17,8 @@ import java.util.Map;
 public class RssFeedBot extends TelegramLongPollingBot {
 
     private final Map<String, BotCommand> commands = new HashMap<String, BotCommand>() {{
-       put("subscribe", new SubscribeCommand());
+        put("list", new ListCommand());
+        put("subscribe", new SubscribeCommand());
     }};
 
     public RssFeedBot(DefaultBotOptions options) {
