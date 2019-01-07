@@ -1,5 +1,6 @@
 package org.telegram.bot.command;
 
+import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.telegram.bot.hibernate.dao.SubscriptionDao;
@@ -23,23 +24,30 @@ public class SubscribeCommand implements BotCommand {
     public void execute(AbsSender sender, Chat chat, User user, String text) {
         try {
             URL url = new URL(text);
-            new SyndFeedInput().build(new XmlReader(url));
+            SyndFeed feed = new SyndFeedInput().build(new XmlReader(url));
             SubscriptionDao subscriptionDao = new SubscriptionDao();
             Subscription subscription = new Subscription(
                     chat.getId(),
                     new URL(text),
                     new Timestamp(System.currentTimeMillis()));
             subscriptionDao.add(subscription);
+            String sendText = "You subscribed to <b>" + feed.getTitle() + "</b>";
+            sendMessage(sender, chat, sendText);
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Invalid rss link", ex);
-            try {
-                SendMessage sendMessage = new SendMessage();
-                sendMessage.setChatId(chat.getId());
-                sendMessage.setText("Sorry! It isn't rss link");
-                sender.execute(sendMessage);
-            } catch (TelegramApiException e) {
-                LOG.log(Level.SEVERE, "Failed to send message");
-            }
+            String sendText = "Sorry! It isn't rss link";
+            sendMessage(sender, chat, sendText);
+        }
+    }
+
+    private void sendMessage(AbsSender sender, Chat chat, String text) {
+        try {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setParseMode("html");
+            sendMessage.setChatId(chat.getId());
+            sendMessage.setText(text);
+            sender.execute(sendMessage);
+        } catch (TelegramApiException ex) {
+            LOG.log(Level.SEVERE, "Failed to send message", ex);
         }
     }
 }
