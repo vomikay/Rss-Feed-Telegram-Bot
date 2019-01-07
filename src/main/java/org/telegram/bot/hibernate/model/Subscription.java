@@ -13,8 +13,8 @@ public class Subscription {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "chat")
-    private Long chat;
+    @Column(name = "chat_id")
+    private Long chatId;
 
     @Column(name = "url")
     private URL url;
@@ -22,14 +22,14 @@ public class Subscription {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "lastupdate")
+    @Column(name = "last_update")
     private Timestamp lastUpdate;
 
     public Subscription() {
     }
 
-    public Subscription(Long chat, URL url, String title, Timestamp lastUpdate) {
-        this.chat = chat;
+    public Subscription(Long chatId, URL url, String title, Timestamp lastUpdate) {
+        this.chatId = chatId;
         this.url = url;
         this.title = title;
         this.lastUpdate = lastUpdate;
@@ -43,12 +43,12 @@ public class Subscription {
         this.id = id;
     }
 
-    public Long getChat() {
-        return chat;
+    public Long getChatId() {
+        return chatId;
     }
 
-    public void setChat(Long chat) {
-        this.chat = chat;
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 
     public URL getUrl() {

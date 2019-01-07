@@ -11,24 +11,24 @@ import java.util.List;
 
 public class SubscriptionDao {
 
-    public boolean hasExist(Long chat, URL url) {
+    public boolean hasExist(Long chatId, URL url) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery("from Subscription where :chat = chat and :url = url");
-        query.setParameter("chat", chat);
+        Query query = session.createQuery("from Subscription where :chat_id = chat_id and :url = url");
+        query.setParameter("chat_id", chatId);
         query.setParameter("url", url);
         List result = query.getResultList();
         session.getTransaction().commit();
         return !result.isEmpty();
     }
 
-    public void delete(Long chat, URL url) {
+    public void delete(Long chatId, URL url) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.getCurrentSession();
         session.beginTransaction();
-        Query query = session.createQuery("delete from Subscription where :chat = chat and :url = url");
-        query.setParameter("chat", chat);
+        Query query = session.createQuery("delete from Subscription where :chat_id = chat_id and :url = url");
+        query.setParameter("chat_id", chatId);
         query.setParameter("url", url);
         query.executeUpdate();
         session.getTransaction().commit();

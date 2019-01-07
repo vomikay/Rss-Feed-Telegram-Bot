@@ -13,7 +13,7 @@ public class UnsubscribeCommand implements BotCommand {
 
     @Override
     public void execute(AbsSender sender, Chat chat, User user, String text) {
-        boolean exist = true;
+        boolean exists = true;
         try {
             URL url = new URL(text);
             Long chatId = chat.getId();
@@ -22,14 +22,13 @@ public class UnsubscribeCommand implements BotCommand {
                 subscriptionDao.delete(chatId, url);
                 String sendText = "You successful unsubscribe";
                 MessageUtil.sendSuccessMessage(sender, chatId, sendText);
-            }
-            else {
-                exist = false;
+            } else {
+                exists = false;
             }
         } catch (MalformedURLException e) {
-            exist = false;
+            exists = false;
         }
-        if (!exist) {
+        if (!exists) {
             String sendText = "You aren't subscribed to the rss";
             MessageUtil.sendErrorMessage(sender, chat.getId(), sendText);
         }

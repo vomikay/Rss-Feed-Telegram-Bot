@@ -55,7 +55,7 @@ public class NotificationService implements Runnable {
 
             if (!entries.isEmpty()) {
                 String sendText = getSendText(subscription.getTitle(), entries);
-                MessageUtil.sendMessage(sender, subscription.getChat(), sendText);
+                MessageUtil.sendMessage(sender, subscription.getChatId(), sendText);
                 subscription.setLastUpdate(newUpdate);
                 dao.update(subscription);
             }
