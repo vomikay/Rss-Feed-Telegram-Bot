@@ -26,10 +26,15 @@ public class SubscribeCommand implements BotCommand {
                     url,
                     feed.getTitle(),
                     new Timestamp(System.currentTimeMillis()));
-            subscriptionDao.add(subscription);
-            String sendText = "You subscribed to <a href='" + subscription.getUrl() + "'>"
-                    + subscription.getTitle() + "</a>";
-            MessageUtil.sendSuccessMessage(sender, chat.getId(), sendText);
+            if (subscriptionDao.hasExisted(subscription)) {
+                String sendText = "You are already subscribed to the rss";
+                MessageUtil.sendErrorMessage(sender, chat.getId(), sendText);
+            } else {
+                subscriptionDao.add(subscription);
+                String sendText = "You subscribed to <a href='" + subscription.getUrl() + "'>"
+                        + subscription.getTitle() + "</a>";
+                MessageUtil.sendSuccessMessage(sender, chat.getId(), sendText);
+            }
         } catch (Exception ex) {
             String sendText = "Sorry! It isn't rss link";
             MessageUtil.sendErrorMessage(sender, chat.getId(), sendText);

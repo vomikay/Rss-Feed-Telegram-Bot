@@ -10,6 +10,18 @@ import java.util.List;
 
 public class SubscriptionDao {
 
+    public boolean hasExisted(Subscription subscription) {
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createQuery("from Subscription where :chat = chat and :url = url");
+        query.setParameter("chat", subscription.getChat());
+        query.setParameter("url", subscription.getUrl());
+        List result = query.getResultList();
+        session.getTransaction().commit();
+        return !result.isEmpty();
+    }
+
     public void add(Subscription subscription) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.getCurrentSession();

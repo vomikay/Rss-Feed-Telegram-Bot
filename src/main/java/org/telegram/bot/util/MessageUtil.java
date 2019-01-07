@@ -26,10 +26,10 @@ public class MessageUtil {
     }
 
     public static void sendSuccessMessage(AbsSender sender, Long chatId, String htmlText) {
-        sendMessage(sender, chatId, SUCCESS_EMOJI + ' ' + htmlText);
+        sendMessage(sender, chatId, SUCCESS_EMOJI + " " + htmlText);
     }
 
     public static void sendErrorMessage(AbsSender sender, Long chatId, String htmlText) {
-        sendMessage(sender, chatId, ERROR_EMOJI + ' ' + htmlText);
+        sendMessage(sender, chatId, ERROR_EMOJI + " " + htmlText);
     }
 }
