@@ -5,8 +5,8 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
-import org.telegram.bot.hibernate.dao.SubscriptionDao;
-import org.telegram.bot.hibernate.model.Subscription;
+import org.telegram.bot.hibernate.dao.FeedDao;
+import org.telegram.bot.hibernate.model.Feed;
 import org.telegram.bot.util.MessageUtil;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
@@ -33,10 +33,10 @@ public class NotificationService implements Runnable {
     public void run() {
         while (true) {
             try {
-                SubscriptionDao subscriptionDao = new SubscriptionDao();
-                List<Subscription> subscriptions = subscriptionDao.getAll();
-                for (Subscription subscription : subscriptions) {
-                    sendMessage(subscriptionDao, subscription);
+                FeedDao feedDao = new FeedDao();
+                List<Feed> feeds = feedDao.getAll();
+                for (Feed feed : feeds) {
+                    sendMessage(feedDao, feed);
                 }
                 Thread.sleep(SLEEP_TIME);
             } catch (InterruptedException ex) {
@@ -46,32 +46,32 @@ public class NotificationService implements Runnable {
         }
     }
 
-    private void sendMessage(SubscriptionDao dao, Subscription subscription) {
+    private void sendMessage(FeedDao dao, Feed feed) {
         try {
-            XmlReader xml = new XmlReader(subscription.getUrl());
-            SyndFeed feed = new SyndFeedInput().build(xml);
+            XmlReader xml = new XmlReader(feed.getUrl());
+            SyndFeed syndFeed = new SyndFeedInput().build(xml);
             Timestamp newUpdate = new Timestamp(System.currentTimeMillis());
-            List<SyndEntry> entries = getEntries(feed, subscription);
+            List<SyndEntry> entries = getEntries(syndFeed, feed);
 
             if (!entries.isEmpty()) {
-                String sendText = getSendText(subscription.getTitle(), entries);
-                MessageUtil.sendMessage(sender, subscription.getChatId(), sendText);
-                subscription.setLastUpdate(newUpdate);
-                dao.update(subscription);
+                String sendText = getSendText(feed.getTitle(), entries);
+                MessageUtil.sendMessage(sender, feed.getChatId(), sendText);
+                feed.setLastUpdate(newUpdate);
+                dao.update(feed);
             }
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Failed to read xml", ex);
         } catch (FeedException ex) {
-            LOG.log(Level.SEVERE, "Invalid rss format", ex);
+            LOG.log(Level.SEVERE, "Invalid rss or atom format", ex);
         }
     }
 
-    private List<SyndEntry> getEntries(SyndFeed feed, Subscription subscription) {
-        return feed.getEntries().stream()
+    private List<SyndEntry> getEntries(SyndFeed syndFeed, Feed feed) {
+        return syndFeed.getEntries().stream()
                 .filter((e) -> {
                     Date publishDate = e.getUpdatedDate();
                     Timestamp publish = new Timestamp(publishDate.getTime());
-                    return subscription.getLastUpdate().before(publish);
+                    return feed.getLastUpdate().before(publish);
                 })
                 .collect(Collectors.toList());
     }

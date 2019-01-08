@@ -6,5 +6,5 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 
 public interface BotCommand {
 
-    public void execute(AbsSender sender, Chat chat, User user, String text);
+    void execute(AbsSender sender, Chat chat, User user, String text);
 }

@@ -5,8 +5,8 @@ import java.net.URL;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "subscription")
-public class Subscription {
+@Table(name = "feed")
+public class Feed {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +25,10 @@ public class Subscription {
     @Column(name = "last_update")
     private Timestamp lastUpdate;
 
-    public Subscription() {
+    public Feed() {
     }
 
-    public Subscription(Long chatId, URL url, String title, Timestamp lastUpdate) {
+    public Feed(Long chatId, URL url, String title, Timestamp lastUpdate) {
         this.chatId = chatId;
         this.url = url;
         this.title = title;
