@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 public class HelpCommand implements BotCommand {
 
     private static final String SEND_TEXT = "<b>Commands</b>\n"
-            + "/list  List subscribed list\n"
+            + "/list  List subscribed feeds\n"
             + "/add <b>[url]</b>  Add a new feed\n"
             + "/remove <b>[url]</b>  Remove a feed";
 
