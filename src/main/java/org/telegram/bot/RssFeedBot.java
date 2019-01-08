@@ -15,7 +15,9 @@ import java.util.Map;
 public class RssFeedBot extends TelegramLongPollingBot {
 
     private final Map<String, BotCommand> commands = new HashMap<String, BotCommand>() {{
-        put("help", new HelpCommand());
+        HelpCommand helpCommand = new HelpCommand();
+        put("help", helpCommand);
+        put("start", new StartCommand(helpCommand));
         put("list", new ListCommand());
         put("add", new AddCommand());
         put("remove", new RemoveCommand());
