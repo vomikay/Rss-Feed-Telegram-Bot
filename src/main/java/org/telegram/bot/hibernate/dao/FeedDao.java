@@ -59,4 +59,15 @@ public class FeedDao {
         session.getTransaction().commit();
         return feeds;
     }
+
+    public List<Feed> getAllForChat(Long chatId) {
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.getCurrentSession();
+        session.beginTransaction();
+        Query<Feed> query = session.createQuery("from Feed where :chat_id = chat_id", Feed.class);
+        query.setParameter("chat_id", chatId);
+        List<Feed> feeds = query.getResultList();
+        session.getTransaction().commit();
+        return feeds;
+    }
 }

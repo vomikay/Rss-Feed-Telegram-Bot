@@ -15,7 +15,7 @@ public class ListCommand implements BotCommand {
     public void execute(AbsSender sender, Chat chat, User user, String text) {
         Long chatId = chat.getId();
         FeedDao feedDao = new FeedDao();
-        List<Feed> feeds = feedDao.getAll();
+        List<Feed> feeds = feedDao.getAllForChat(chatId);
         StringBuilder sendTextBuilder = new StringBuilder();
         int number = 1;
         if (!feeds.isEmpty()) {
