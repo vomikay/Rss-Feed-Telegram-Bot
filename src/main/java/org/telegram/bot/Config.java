@@ -22,9 +22,11 @@ public class Config {
         try (FileInputStream input = new FileInputStream("src/main/resources/config.properties")) {
             Properties properties = new Properties();
             properties.load(input);
-            PROXY_TYPE = DefaultBotOptions.ProxyType.valueOf(properties.getProperty("proxy.type"));
+            String proxyTypeString = properties.getProperty("proxy.type");
+            String proxyPortString = properties.getProperty("proxy.port");
+            PROXY_TYPE = (proxyTypeString == null) ? null : DefaultBotOptions.ProxyType.valueOf(proxyTypeString);
             PROXY_HOST = properties.getProperty("proxy.host");
-            PROXY_PORT = Integer.valueOf(properties.getProperty("proxy.port"));
+            PROXY_PORT = (proxyPortString == null) ? null : Integer.valueOf(proxyPortString);
             BOT_TOKEN = properties.getProperty("bot.token");
             BOT_USERNAME = properties.getProperty("bot.username");
         } catch (IOException ex) {
