@@ -1,8 +1,7 @@
 # Intelij IDEA
 .idea/
 *.iml
-*.properties
-*.cfg.xml
+target/
 
 # Compiled class file
 *.class
