@@ -1,21 +1,22 @@
 package org.telegram.bot.command;
 
-import org.telegram.bot.hibernate.dao.FeedDao;
-import org.telegram.bot.hibernate.model.Feed;
+import org.telegram.bot.hibernate.dao.SubscriberDao;
+import org.telegram.bot.hibernate.entity.Feed;
+import org.telegram.bot.hibernate.entity.Subscriber;
 import org.telegram.bot.util.MessageUtil;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
-import java.util.List;
+import java.util.Set;
 
 public class ListCommand implements BotCommand {
 
     @Override
     public void execute(AbsSender sender, Chat chat, User user, String text) {
-        Long chatId = chat.getId();
-        FeedDao feedDao = new FeedDao();
-        List<Feed> feeds = feedDao.getAllForChat(chatId);
+        SubscriberDao subscriberDao = new SubscriberDao();
+        Subscriber subscriber = subscriberDao.get(user.getUserName());
+        Set<Feed> feeds = subscriber.getFeeds();
         StringBuilder sendTextBuilder = new StringBuilder();
         int number = 1;
         if (!feeds.isEmpty()) {
@@ -32,10 +33,10 @@ public class ListCommand implements BotCommand {
                         .append("</a>\n");
                 number++;
             }
-            MessageUtil.sendMessage(sender, chatId, sendTextBuilder.toString());
+            MessageUtil.sendMessage(sender, chat.getId(), sendTextBuilder.toString());
         } else {
             String sendText = "You have no subscriptions";
-            MessageUtil.sendErrorMessage(sender, chatId, sendText);
+            MessageUtil.sendErrorMessage(sender, chat.getId(), sendText);
         }
     }
 }

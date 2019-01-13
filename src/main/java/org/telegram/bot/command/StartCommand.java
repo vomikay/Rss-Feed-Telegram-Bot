@@ -1,5 +1,7 @@
 package org.telegram.bot.command;
 
+import org.telegram.bot.hibernate.dao.SubscriberDao;
+import org.telegram.bot.hibernate.entity.Subscriber;
 import org.telegram.bot.util.MessageUtil;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -20,6 +22,12 @@ public class StartCommand implements BotCommand {
 
     @Override
     public void execute(AbsSender sender, Chat chat, User user, String text) {
+        SubscriberDao subscriberDao = new SubscriberDao();
+        subscriberDao.add(new Subscriber(
+                user.getUserName(),
+                chat.getId(),
+                user.getFirstName(),
+                user.getLastName()));
         MessageUtil.sendMessage(sender, chat.getId(), SEND_TEXT);
         helpCommand.execute(sender, chat, user, text);
     }

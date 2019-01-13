@@ -6,7 +6,9 @@ import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
 import org.telegram.bot.hibernate.dao.FeedDao;
-import org.telegram.bot.hibernate.model.Feed;
+import org.telegram.bot.hibernate.dao.SubscriberDao;
+import org.telegram.bot.hibernate.entity.Feed;
+import org.telegram.bot.hibernate.entity.Subscriber;
 import org.telegram.bot.util.MessageUtil;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -33,10 +36,12 @@ public class NotificationService implements Runnable {
     public void run() {
         while (true) {
             try {
-                FeedDao feedDao = new FeedDao();
-                List<Feed> feeds = feedDao.getAll();
-                for (Feed feed : feeds) {
-                    sendMessage(feedDao, feed);
+                SubscriberDao subscriberDao = new SubscriberDao();
+                Set<Subscriber> subscribers = subscriberDao.getAll();
+                for (Subscriber subscriber : subscribers) {
+                    for (Feed feed : subscriber.getFeeds()) {
+                        sendMessage(feed, subscriber.getChatId());
+                    }
                 }
                 Thread.sleep(SLEEP_TIME);
             } catch (InterruptedException ex) {
@@ -46,8 +51,9 @@ public class NotificationService implements Runnable {
         }
     }
 
-    private void sendMessage(FeedDao dao, Feed feed) {
+    private void sendMessage(Feed feed, Long chatId) {
         try {
+            FeedDao feedDao = new FeedDao();
             XmlReader xml = new XmlReader(feed.getUrl());
             SyndFeed syndFeed = new SyndFeedInput().build(xml);
             Timestamp newUpdate = new Timestamp(System.currentTimeMillis());
@@ -55,9 +61,9 @@ public class NotificationService implements Runnable {
 
             if (!entries.isEmpty()) {
                 String sendText = getSendText(feed.getTitle(), entries);
-                MessageUtil.sendMessage(sender, feed.getChatId(), sendText);
+                MessageUtil.sendMessage(sender, chatId, sendText);
                 feed.setLastUpdate(newUpdate);
-                dao.update(feed);
+                feedDao.update(feed);
             }
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Failed to read xml", ex);

@@ -1,4 +1,4 @@
-package org.telegram.bot.hibernate.model;
+package org.telegram.bot.hibernate.entity;
 
 import javax.persistence.*;
 import java.net.URL;
@@ -13,8 +13,9 @@ public class Feed {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "chat_id")
-    private Long chatId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subscriber_id")
+    private Subscriber subscriber;
 
     @Column(name = "url")
     private URL url;
@@ -28,8 +29,8 @@ public class Feed {
     public Feed() {
     }
 
-    public Feed(Long chatId, URL url, String title, Timestamp lastUpdate) {
-        this.chatId = chatId;
+    public Feed(Subscriber subscriber, URL url, String title, Timestamp lastUpdate) {
+        this.subscriber = subscriber;
         this.url = url;
         this.title = title;
         this.lastUpdate = lastUpdate;
@@ -43,12 +44,12 @@ public class Feed {
         this.id = id;
     }
 
-    public Long getChatId() {
-        return chatId;
+    public Subscriber getSubscriber() {
+        return subscriber;
     }
 
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
+    public void setSubscriber(Subscriber subscriber) {
+        this.subscriber = subscriber;
     }
 
     public URL getUrl() {
